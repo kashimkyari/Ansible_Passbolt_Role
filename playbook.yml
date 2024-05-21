@@ -1,0 +1,4 @@
+- hosts: all
+  become: yes
+  roles:
+    - passbolt_role

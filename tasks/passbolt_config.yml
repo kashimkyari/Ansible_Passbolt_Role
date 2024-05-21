@@ -1,0 +1,25 @@
+---
+# Tasks file for configuring Passbolt
+
+- name: Configure Passbolt settings
+  template:
+    src: "passbolt.php.j2"
+    dest: "/var/www/passbolt/config/passbolt.php"
+
+- name: Ensure Passbolt data directory exists
+  file:
+    path: "/var/www/passbolt/data"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Set up automated backups
+  cron:
+    name: "Passbolt backup"
+    minute: "{{ backup_cron_schedule.split(' ')[0] }}"
+    hour: "{{ backup_cron_schedule.split(' ')[1] }}"
+    day: "{{ backup_cron_schedule.split(' ')[2] }}"
+    month: "{{ backup_cron_schedule.split(' ')[3] }}"
+    weekday: "{{ backup_cron_schedule.split(' ')[4] }}"
+    job: "/usr/bin/mysqldump -u root -p{{ passbolt_db_password }} {{ passbolt_db_name }} > {{ backup_directory }}/passbolt_backup.sql"

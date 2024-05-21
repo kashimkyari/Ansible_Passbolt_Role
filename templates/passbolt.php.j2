@@ -1,0 +1,22 @@
+<?php
+/**
+ * Passbolt configuration settings.
+ */
+
+use Cake\Core\Configure;
+
+// Database settings
+Configure::write('Datasources.default', [
+    'host' => 'localhost',
+    'username' => '{{ passbolt_db_user }}',
+    'password' => '{{ passbolt_db_password }}',
+    'database' => '{{ passbolt_db_name }}',
+]);
+
+// Base URL
+Configure::write('App.fullBaseUrl', '{{ passbolt_base_url }}');
+
+// GPG settings
+Configure::write('Gpg.serverKey.fingerprint', '');
+Configure::write('Gpg.serverKey.public', '');
+Configure::write('Gpg.serverKey.private', 'file://{{ passbolt_gpg_private_key_path }}');

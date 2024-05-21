@@ -1,0 +1,12 @@
+---
+# Main variables for passbolt_role
+
+passbolt_db_name: passbolt
+passbolt_db_user: passbolt_user
+passbolt_db_password: example_password
+passbolt_base_url: https://passbolt.example.com
+passbolt_gpg_private_key_path: /path/to/private.key
+nginx_config_file: /etc/nginx/sites-available/passbolt
+php_config_file: /etc/php/7.4/fpm/php.ini
+backup_directory: /var/backups
+backup_cron_schedule: "0 3 * * *"

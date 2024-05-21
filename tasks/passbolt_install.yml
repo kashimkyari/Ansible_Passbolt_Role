@@ -1,0 +1,43 @@
+---
+# Tasks file for installing Passbolt
+
+- name: Download Passbolt
+  get_url:
+    url: "https://github.com/passbolt/passbolt_api/releases/download/v3.6.0/passbolt-ce-3.6.0.tar.gz"
+    dest: "/tmp/passbolt.tar.gz"
+
+- name: Extract Passbolt
+  unarchive:
+    src: "/tmp/passbolt.tar.gz"
+    dest: "/var/www/passbolt"
+    remote_src: true
+
+- name: Set up Nginx configuration
+  template:
+    src: "passbolt.conf.j2"
+    dest: "{{ nginx_config_file }}"
+  notify: Restart Nginx
+
+- name: Configure PHP
+  template:
+    src: "php.ini.j2"
+    dest: "{{ php_config_file }}"
+  notify: Restart PHP-FPM
+
+- name: Create symbolic link for Nginx
+  file:
+    src: "{{ nginx_config_file }}"
+    dest: /etc/nginx/sites-enabled/passbolt
+    state: link
+    force: yes
+
+- name: Remove default Nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Install Passbolt
+  command: "php bin/cake passbolt install --no-admin"
+  args:
+    chdir: "/var/www/passbolt"
+  become: true
